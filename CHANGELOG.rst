@@ -13,6 +13,7 @@ and this project adheres to `Semantic Versioning <https://semver.org/spec/v2.0.0
 Added
 -----
 * Added ``BleakAdapter`` class with ``get_connected_devices()`` to retrieve BLE devices that are already connected to the system without scanning.
+* Added new Android backend for apps built with BeeWare/Briefcase (Chaquopy). Requires Python 3.13 or later.
 
 Changed
 -------
@@ -20,7 +21,14 @@ Changed
 
 Fixed
 -----
+* Fixed deprecated ``adapter`` keyword argument mutating shared defaults and caller-provided ``bluez`` arguments in ``BleakScanner`` and ``BleakClient``. Fixes #2028.
 * Fixed handling empty notification payloads in BlueZ backend when using "AcquireNotify". Fixes #1982.
+* Fixed memory leaks when scanning and using a notification discriminator in CoreBluetooth backend.
+* Fixed crash in WinRT backend if a WinRT event handler is called after the asyncio event loop is closed.
+* Fixed device removed callbacks in BlueZ backend matching devices on adapters whose name starts with the watched adapter name, e.g. ``hci10`` for ``hci1``.
+* Fixed BlueZ backend not detecting loss of the D-Bus connection, which left clients reporting connected forever and disconnect callbacks never firing.
+* Fixed ``disconnect()`` raising ``EOFError`` and leaking the D-Bus connection in BlueZ backend when the message bus died.
+* Fixed ``BleakScanner.stop()`` raising ``BleakDBusError`` with ``org.bluez.Error.InProgress`` in BlueZ backend when the kernel had already stopped scanning. Fixes #2021.
 
 `3.0.2`_ (2026-05-02)
 =====================
